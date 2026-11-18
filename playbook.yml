@@ -1,0 +1,58 @@
+---
+- name: play1 manage isky webservers
+  hosts: isky
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: T1 create user
+      user:
+        name: "{{ item }}"
+        state: present
+      ignore_errors: yes
+      loop: "{{ U }}"
+          
+    - name: T2 install web
+      dnf:
+        name: "{{ SW }}"
+        state: present
+      notify: T5
+
+          
+    - name: T3 enable web
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled:  yes
+      loop: "{{ SRV }}"
+
+    - name: T4 open port http
+      firewalld:
+        service: "{{ PORT }}"
+        permanent: yes
+        state: enabled
+        immediate: yes
+  handlers:          
+    - name: T5
+      copy:
+        src: index.html
+        dest: /var/www/html/index.html      
+ ###########################################################################
+
+- name: play2 test from network
+  hosts: workstation
+  remote_user: student
+  tasks:
+    - name: T6 test page
+      uri:
+        url: http://serverb
+        status_code: 200
+        return_content: yes
+      register: page
+
+    - name: print out web page
+      debug:
+        var: page.content
+
+    - name: print facts
+      debug:
+        var: ansible_facts.memfree_mb

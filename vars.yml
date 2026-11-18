@@ -1,3 +1,15 @@
-    U: medo22webadmin
-    SW: httpd
+    U: 
+      - webadmin1
+      - webadmin2
+      - webadmin3
+
+    SW: 
+      - httpd
+      - vsftpd
+      - ftp
+
+    SRV: 
+      - httpd
+      - vsftpd
+
     PORT: http
