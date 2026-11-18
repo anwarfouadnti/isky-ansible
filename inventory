@@ -1,0 +1,13 @@
+workstation
+
+[webservers]
+servera
+serverb
+
+[dbservers]
+serverc
+serverd
+
+[isky:children]
+webservers
+dbservers
